@@ -4,50 +4,22 @@ using CW4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CW4.Migrations
 {
     [DbContext(typeof(CW4Context))]
-    partial class CW4ContextModelSnapshot : ModelSnapshot
+    [Migration("20201104121131_AddSemestrToStudent")]
+    partial class AddSemestrToStudent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CW4.Models.Course", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Nazwa")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("CW4.Models.CourseGroup", b =>
-                {
-                    b.Property<int>("CourseID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GroupID")
-                        .HasColumnType("int");
-
-                    b.HasKey("CourseID", "GroupID");
-
-                    b.HasIndex("GroupID");
-
-                    b.ToTable("CourseGroups");
-                });
 
             modelBuilder.Entity("CW4.Models.Group", b =>
                 {
@@ -94,21 +66,6 @@ namespace CW4.Migrations
                     b.HasIndex("GroupId");
 
                     b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("CW4.Models.CourseGroup", b =>
-                {
-                    b.HasOne("CW4.Models.Course", "Course")
-                        .WithMany("CourseGroups")
-                        .HasForeignKey("CourseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CW4.Models.Group", "Group")
-                        .WithMany("CourseGroups")
-                        .HasForeignKey("GroupID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CW4.Models.Student", b =>

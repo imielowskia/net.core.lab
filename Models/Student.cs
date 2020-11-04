@@ -26,6 +26,5 @@ namespace CW4.Models
                 return Imie + " " + Nazwisko;
             }
         }
-        
     }
 }

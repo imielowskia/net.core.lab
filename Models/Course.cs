@@ -7,14 +7,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CW4.Models
 {
-    [Table("Groups")]
-    public class Group
+    [Table("Courses")]
+    public class Course
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Nazwa { get; set; }
-        public int Semestr { get; set; }
-        public ICollection<Student> Students { get; set; }
         public ICollection<CourseGroup> CourseGroups { get; set; }
     }
 }
