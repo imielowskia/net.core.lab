@@ -19,5 +19,13 @@ namespace CW4.Models
         public bool Aktywny { get; set; }
         public int GroupId { get; set; }
         public Group Group { get; set; }
+        public string ImieNazwisko
+        {
+            get
+            {
+                return Imie + " " + Nazwisko;
+            }
+        }
+        
     }
 }
