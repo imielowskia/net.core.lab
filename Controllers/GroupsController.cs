@@ -21,7 +21,7 @@ namespace CW4.Controllers
         // GET: Groups
         public async Task<IActionResult> Index()
         {
-            var cW4Context = _context.Groups.Include(s=>s.Students);
+            var cW4Context = _context.Groups.Include(s=>s.Students).Include(cg=>cg.CourseGroups).ThenInclude(c => c.Course);
             return View(await cW4Context.ToListAsync());
         }
 
@@ -46,6 +46,7 @@ namespace CW4.Controllers
         // GET: Groups/Create
         public IActionResult Create()
         {
+            GetCourseList();
             return View();
         }
 
@@ -58,9 +59,22 @@ namespace CW4.Controllers
         {
             if (ModelState.IsValid)
             {
+                var lista = HttpContext.Request.Form["selectedCourses"];
                 _context.Add(@group);
                 await _context.SaveChangesAsync();
+
+                foreach (var l in lista)
+                {
+                    var cg = new CourseGroup();
+                    cg.CourseID = int.Parse(l);
+                    cg.GroupID = @group.Id;
+                    _context.Add(cg);
+                    await _context.SaveChangesAsync();
+
+                }
                 return RedirectToAction(nameof(Index));
+                
+
             }
             return View(@group);
         }
@@ -78,6 +92,7 @@ namespace CW4.Controllers
             {
                 return NotFound();
             }
+            GetSelectedCourseList(@group);
             return View(@group);
         }
 
@@ -97,7 +112,23 @@ namespace CW4.Controllers
             {
                 try
                 {
+                    foreach(var cgold in _context.CourseGroups.Where(cg => cg.GroupID == group.Id))
+                    {
+                        _context.Remove(cgold);
+                    }
+                    var lista = HttpContext.Request.Form["selectedCourses"];
+                    foreach (var l in lista)
+                    {
+                        var cg = new CourseGroup();
+                        cg.CourseID = int.Parse(l);
+                        cg.GroupID = group.Id;
+                        _context.Add(cg);
+                        await _context.SaveChangesAsync();
+                    }
+
                     _context.Update(@group);
+                    
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -148,6 +179,47 @@ namespace CW4.Controllers
         private bool GroupExists(int id)
         {
             return _context.Groups.Any(e => e.Id == id);
+        }
+
+        private void GetCourseList()
+        {
+            var allcourses = _context.Courses;
+            var Kursy = new List<C>();
+            foreach (var c in allcourses)
+            {
+                Kursy.Add(new C
+                {
+                    CourseId = c.Id,
+                    Nazwa = c.Nazwa,
+                    Checked = ""
+                });
+            }
+            ViewData["courses"] = Kursy;
+        }
+
+        private void GetSelectedCourseList(Group group)
+        {
+            var allcourses = _context.Courses;
+            var selectcourses = _context.CourseGroups.Where(cg => cg.GroupID == group.Id).ToList();
+            var Kursy = new List<C>();
+            foreach (var c in allcourses)
+            {
+                Kursy.Add(new C
+                {
+                    CourseId = c.Id,
+                    Nazwa = c.Nazwa,
+                    Checked = ""
+                });
+            }
+            foreach(var k in Kursy)
+            {
+                if (selectcourses.Exists(cg => cg.CourseID == k.CourseId))
+                {
+                    k.Checked = "checked";
+                }
+
+            }
+            ViewData["courses"] = Kursy;
         }
     }
 }

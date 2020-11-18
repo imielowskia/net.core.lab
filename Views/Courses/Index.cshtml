@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CW4.Models.Group>
+﻿@model IEnumerable<CW4.Models.Course>
 
 @{
     ViewData["Title"] = "Index";
@@ -15,10 +15,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Nazwa)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Students)
-            </th>
-
             <th></th>
         </tr>
     </thead>
@@ -27,18 +23,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nazwa)
-            </td>
-            <td>
-                @foreach (var s in item.Students)
-                {
-                    @s.ImieNazwisko<br />
-                }
-            </td>
-            <td>
-                @foreach (var cg in item.CourseGroups)
-                {
-                    @cg.Course.Nazwa<br />
-                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
