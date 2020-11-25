@@ -148,7 +148,7 @@ namespace CW4.Controllers
             int gid = int.Parse(HttpContext.Request.Form["gid"]);
             var Slist = _context.Students.Where(s => s.GroupId == gid);
 
-            foreach(Student s in Slist)
+            foreach(var s in Slist)
             {
                 int xgr = int.Parse(HttpContext.Request.Form[s.Id.ToString()]);
                 var g = new Grade();
@@ -156,9 +156,10 @@ namespace CW4.Controllers
                 g.CourseID = cid;
                 g.GroupID = gid;
                 g.Ocena = xgr;
-                await _context.SaveChangesAsync();
-                
+                //g.Data = DateTime.Today;
+                _context.Add(g);
             }
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
