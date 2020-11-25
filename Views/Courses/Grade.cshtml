@@ -1,0 +1,23 @@
+﻿@model CW4.Models.Course
+
+<h3> Oceny dla grupy: @ViewBag.group.Nazwa </h3>
+<h3> z przedmiotu @ViewBag.course.Nazwa </h3>
+
+<form asp-action="Grade">
+    <input type="hidden" name="cid" value="@ViewBag.course.Id" />
+    <input type="hidden" name="gid" value="@ViewBag.group.Id" />
+
+    <table class="table">
+
+        @foreach (var s in ViewBag.grades)
+        {
+            <tr>
+                <td>@s.ImieNazwisko</td>
+                <td><input name="@s.StudentID" class="form-control" value="0" /> </td>
+            </tr>
+
+        }
+
+    </table>
+    <input type="submit" value="Zapisz" class="btn btn-dark" />
+</form>

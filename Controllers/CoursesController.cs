@@ -21,7 +21,8 @@ namespace CW4.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Courses.ToListAsync());
+            var cW4Context = _context.Courses.Include(cg => cg.CourseGroups).ThenInclude(g => g.Group);
+            return View(await cW4Context.ToListAsync());
         }
 
         // GET: Courses/Details/5
@@ -113,6 +114,52 @@ namespace CW4.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(course);
+        }
+
+        //metoda Grade do wystawiania ocen
+        public async Task<IActionResult> Grade(int? cid, int? gid)
+        {
+            var Slist =  _context.Students.Where(s => s.GroupId == gid);
+            var xcourse = await _context.Courses.FindAsync(cid);
+            var xgroup = await _context.Groups.FindAsync(gid);
+            var GSList = new List<GS>();
+            foreach(Student s in Slist)
+            {
+                GSList.Add(new GS
+                {
+                    StudentID = s.Id,
+                    ImieNazwisko = s.ImieNazwisko,
+                    Ocena = 0
+                });
+            }
+            ViewData["grades"] = GSList;
+            ViewData["course"] = xcourse;
+            ViewData["group"] = xgroup;
+            return View(xcourse);
+        }
+
+        //POST Grade
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Grade()
+        {
+            int cid = int.Parse(HttpContext.Request.Form["cid"]);
+            int gid = int.Parse(HttpContext.Request.Form["gid"]);
+            var Slist = _context.Students.Where(s => s.GroupId == gid);
+
+            foreach(Student s in Slist)
+            {
+                int xgr = int.Parse(HttpContext.Request.Form[s.Id.ToString()]);
+                var g = new Grade();
+                g.StudentID = s.Id;
+                g.CourseID = cid;
+                g.GroupID = gid;
+                g.Ocena = xgr;
+                await _context.SaveChangesAsync();
+                
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Courses/Delete/5
