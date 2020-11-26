@@ -156,10 +156,10 @@ namespace CW4.Controllers
                 g.CourseID = cid;
                 g.GroupID = gid;
                 g.Ocena = xgr;
-                //g.Data = DateTime.Today;
+                g.Data = DateTime.Today;
                 _context.Add(g);
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

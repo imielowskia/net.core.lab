@@ -15,6 +15,6 @@ namespace CW4.Models
         public int CourseID { get; set; }
         public int Ocena { get; set; }
         [DataType(DataType.Date)]
-        public DataType Data { get; set; }
+        public DateTime Data { get; set; }
     }
 }
