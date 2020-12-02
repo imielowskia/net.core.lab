@@ -122,14 +122,22 @@ namespace CW4.Controllers
             var Slist =  _context.Students.Where(s => s.GroupId == gid);
             var xcourse = await _context.Courses.FindAsync(cid);
             var xgroup = await _context.Groups.FindAsync(gid);
+            var GList = _context.Grades.Where(g => g.GroupID == gid).Where(g => g.CourseID == cid);
             var GSList = new List<GS>();
             foreach(Student s in Slist)
             {
+                var gs = GList.Where(g => g.StudentID == s.Id).First();
+                var xocena = 0;
+                if (gs != null)
+                {
+                    xocena = gs.Ocena;
+                }
+
                 GSList.Add(new GS
                 {
                     StudentID = s.Id,
                     ImieNazwisko = s.ImieNazwisko,
-                    Ocena = 0
+                    Ocena = xocena
                 });
             }
             ViewData["grades"] = GSList;
@@ -147,8 +155,13 @@ namespace CW4.Controllers
             int cid = int.Parse(HttpContext.Request.Form["cid"]);
             int gid = int.Parse(HttpContext.Request.Form["gid"]);
             var Slist = _context.Students.Where(s => s.GroupId == gid);
+            var GList = _context.Grades.Where(g => g.GroupID == gid).Where(g => g.CourseID == cid);
+            foreach(Grade g in GList)
+            {
+                _context.Remove(g);
+            }
 
-            foreach(var s in Slist)
+            foreach (var s in Slist)
             {
                 int xgr = int.Parse(HttpContext.Request.Form[s.Id.ToString()]);
                 var g = new Grade();
