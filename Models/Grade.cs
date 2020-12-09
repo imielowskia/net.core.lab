@@ -16,5 +16,10 @@ namespace CW4.Models
         public int Ocena { get; set; }
         [DataType(DataType.Date)]
         public DateTime Data { get; set; }
+        public CourseGroup CourseGroup { get; set; }
+        public Student Student { get; set; }
+        public Group Group { get; set; }
+        public Course Course { get; set; }
+
     }
 }
