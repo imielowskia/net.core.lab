@@ -1,0 +1,53 @@
+﻿@model IEnumerable<CW4.Models.Grade>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Ocenianie</h1>
+
+@{var xgr = 0;}
+@{var xcr = 0;}
+
+@foreach (var cg in ViewBag.courses)
+{
+    @if (cg.CourseID != xcr)
+    {
+        <div><h3> @cg.Course.Nazwa </h3></div>
+        <div>
+            <h4> @cg.Group.Nazwa  <button class="btn btn-info" id="btnedit" onclick="edytuj(@cg.CourseID,@cg.GroupID,0)">Pokaż oceny</button></h4>
+        </div>
+        { xgr = cg.GroupID; }
+    }
+    @if (cg.GroupID != xgr)
+    {
+        <div>
+            <h4> @cg.Group.Nazwa  <button class="btn btn-info" id="btnedit" onclick="edytuj(@cg.CourseID,@cg.GroupID,0)">Pokaż oceny</button></h4>
+        </div>
+    }
+    <div id="gradeslist-@cg.CourseID-@cg.GroupID">
+        
+    </div>
+    { xgr = cg.GroupID; }
+    { xcr = cg.CourseID; }
+}
+
+@section Scripts
+{
+    <script>
+        function edytuj(xcr, xgr, typ) {
+            var celdiv = "#gradeslist"+"-"+ xcr + "-" + xgr;
+            var compData = {};
+            compData.cr = xcr;
+            compData.gr = xgr;
+            compData.e = typ;
+            $.ajax({
+                url: '@Url.Action("GradeList", "Grades")',
+                data: compData,
+                success: function (data) {
+                    $(celdiv).html(data);
+                }
+            })
+        }
+    </script>
+}

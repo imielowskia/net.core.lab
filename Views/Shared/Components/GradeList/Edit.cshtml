@@ -1,0 +1,20 @@
+﻿@model IEnumerable<CW4.Models.Grade>
+
+
+<form asp-action="Save" asp-controller="Grades">
+    <input type="hidden" name="cid" value="@ViewBag.cid" />
+    <input type="hidden" name="gid" value="@ViewBag.gid" />
+    <table class="table table-sm table-striped">
+        @foreach (var s in ViewBag.grades)
+        {
+            <tr>
+                <td>@s.ImieNazwisko</td>
+                <td><input name="@s.StudentID" class="form-control" value="@s.Ocena" /> </td>
+            </tr>
+
+        }
+    </table>
+    <div class="form-group">
+        <button class="btn btn-primary btn-sm" id="btnedit" onclick="edytuj(@ViewBag.cid,@ViewBag.gid, 1)">Zapisz</button>
+    </div>
+</form>

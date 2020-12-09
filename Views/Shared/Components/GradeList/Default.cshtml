@@ -1,0 +1,11 @@
+﻿@model IEnumerable<CW4.Models.Grade>
+
+    <ul class="list-group">
+    
+        @foreach (var s in Model)
+        {
+        <li class="list-group-item">  @Html.DisplayFor(modelItem => s.Student.ImieNazwisko) @Html.DisplayFor(modelItem => s.Data) @Html.DisplayFor(modelItem => s.Ocena) </li>
+        }
+
+    </ul>
+    <button class="btn btn-info" id="btnedit" onclick="edytuj(@ViewBag.cid, @ViewBag.gid ,1)">Edytuj</button>
